@@ -1,7 +1,7 @@
 import streamlit.components.v1 as components
 import html
 
-def render_emoji_grid(results):
+def render_emoji_grid(results, columns=3):
     """
     Renders a responsive grid of emoji cards with hover details and copy-to-clipboard functionality.
     """
@@ -38,7 +38,7 @@ def render_emoji_grid(results):
         }}
         .grid {{
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat({columns}, 1fr);
             gap: 15px;
         }}
         .card {{
@@ -167,7 +167,7 @@ def render_emoji_grid(results):
     """
     
     # Calculate height based on rows (approx 200px per row + gap)
-    rows = (len(results) + 2) // 3
+    rows = (len(results) + columns - 1) // columns
     height = rows * 220 + 20 
     
     components.html(component_code, height=height)

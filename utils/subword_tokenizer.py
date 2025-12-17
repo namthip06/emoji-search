@@ -1,7 +1,15 @@
 import nltk
 from nltk.corpus import wordnet as wn
 from langdetect import detect, detect_langs
-from iso_mapping import iso_mapping 
+
+try:
+    from .iso_mapping import iso_mapping
+except ImportError:
+    try:
+        from iso_mapping import iso_mapping
+    except ImportError:
+        # Fallback if running from outside and utils not in path (?) - though app.py adds it
+        from utils.iso_mapping import iso_mapping 
 
 # only run in first time
 # try:
@@ -63,7 +71,6 @@ class SubwordTokenizer:
         """
         results = []
         lang_code = self.detect_language(compound_word)
-        # print(f"Language code: {lang_code}")
         word_len = len(compound_word)
         
         # Loop to find all possible split points
@@ -80,11 +87,11 @@ if __name__ == "__main__":
     splitter = SubwordTokenizer()
 
     # Example 1: English
-    word_list_en = ['Sunflower', 'Firefly', 'Keyboard']
-    for word in word_list_en:
-        print(f"{word}: {splitter.split_compound(word)}")
+    # word_list_en = ['Sunflower', 'Firefly', 'Keyboard']
+    # for word in word_list_en:
+    #     print(f"{word}: {splitter.split_compound(word)}")
 
     # Example 2: Thai
-    text_th = "สวัสดีครับ"
-    print(f"Detected: {text_th} -> {splitter.detect_language(text_th)}")
-    print(f"Test Thai: {splitter.split_compound(text_th)}")
+    word_list_th = ['เสื้อกันฝน', 'เครื่องดูดฝุ่น', 'ที่เปิดกระป๋อง']
+    for word in word_list_th:
+        print(f"{word}: {splitter.split_compound(word)}")
