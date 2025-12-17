@@ -30,15 +30,13 @@ class EmojiSearcher:
             print(f"Error accessing collection '{collection_name}': {e}")
             self.collection = None
 
-    def search(self, query: str, n_results: int = 10, threshold: float = 0.5) -> list[dict]:
+    def search(self, query: str, n_results: int = 10) -> list[dict]:
         """
         Search for emojis based on the query.
         
         Args:
             query (str): The search text.
             n_results (int): Number of top results to return.
-            threshold (float): Distance threshold for warning (lower distance = better match).
-                               If the best match distance is > threshold, a warning is printed.
         
         Returns:
             list[dict]: A list of dictionaries containing result details.
@@ -58,13 +56,6 @@ class EmojiSearcher:
         if not results['ids'] or not results['ids'][0]:
             print("No results found.")
             return output
-        
-        # Check the distance of the top result
-        # ChromaDB default metric is usually L2 (Euclidean Distance)
-        # 0.0 means identical.
-        best_distance = results['distances'][0][0]
-        if best_distance > threshold:
-            print(f"Warning: Low similarity match. Best distance: {best_distance:.4f} (Threshold: {threshold})")
 
         # Format results
         count = len(results['ids'][0])
