@@ -29,9 +29,9 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Header
+# Header                                        
 st.title("✨ Semantic Emoji Search")
-st.markdown("Type a phrase (in English or Thai) to find the most relevant emojis powered by AI.")
+st.markdown("Type a phrase (support 25+ languages following WordNet (OMW 1.4)) to find the most relevant emojis powered by AI.")
 
 # Initialize Searcher (Cached)
 @st.cache_resource
@@ -67,24 +67,24 @@ if query:
         if tokenizer:
             try:
                 subword_splits = tokenizer.split_compound(query)
-                # subword_splits is list of tuples, e.g. [('Sun', 'flower')]
-
+                # subword_splits is list of list of str
                 print("Subword splits:", subword_splits)
                 
-                # Use the first valid split if any
-                if subword_splits:
-                    parts = subword_splits[0] # (part1, part2)
-                    
-                    # Search for parts
-                    sub_results_1 = searcher.search(parts[0], n_results=4)
-                    sub_results_2 = searcher.search(parts[1], n_results=4)
-                else:
-                    parts = None
+                # Prepare results for all splits
+                all_compound_results = []
+                for parts in subword_splits:
+                    # parts is list of strings, e.g. ['Sun', 'flower']
+                    split_entry = []
+                    for part in parts:
+                        part_res = searcher.search(part, n_results=1)
+                        split_entry.append((part, part_res))
+                    all_compound_results.append(split_entry)
+
             except Exception as e:
                 print(f"Subword search error: {e}")
-                parts = None
+                all_compound_results = []
         else:
-            parts = None
+            all_compound_results = []
 
     if results:
         st.markdown(f"### Results for *'{query}'*")
@@ -95,17 +95,31 @@ if query:
         st.info("No direct matching emojis found.")
 
     # Display Subword Analysis if available
-    if parts:
+    if all_compound_results:
         st.markdown("---")
-        st.subheader("🧩 Compound Breakdown")
-        st.markdown(f"Detected compound words: **{parts[0]}** + **{parts[1]}**")
+        st.subheader("Compound Breakdowns")
         
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.caption(f"Results for '{parts[0]}'")
-            render_emoji_grid(sub_results_1, columns=2)
+        for idx, split_group in enumerate(all_compound_results):
+            # split_group is a list of (word, results)
+            words = [item[0] for item in split_group]
+            breakdown_text = " + ".join([f"**{w}**" for w in words])
             
-        with col2:
-            st.caption(f"Results for '{parts[1]}'")
-            render_emoji_grid(sub_results_2, columns=2)
+            st.markdown(f"##### Option {idx+1}: {breakdown_text}")
+            
+            # Display parts in a grid with 2 columns per row
+            grid_cols = 2
+            for i in range(0, len(split_group), grid_cols):
+                chunk = split_group[i:i + grid_cols]
+                cols = st.columns(grid_cols)
+                
+                for j, (word, sub_res) in enumerate(chunk):
+                    with cols[j]:
+                        st.caption(f"'{word}'")
+                        if sub_res:
+                            # Use more columns inside to make it more square if width allows
+                            render_emoji_grid(sub_res, columns=2)
+                        else:
+                            st.text("-")
+            
+            if idx < len(all_compound_results) - 1:
+                st.divider()

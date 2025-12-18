@@ -15,7 +15,7 @@ def render_emoji_grid(results, columns=3):
         cards_html += f"""
         <div class="card" onclick="copyToClipboard('{char}')">
             <div class="char">{char}</div>
-            <div class="score">Match: {score:.2f}</div>
+            <div class="score">Match: {score:.4f}</div>
             <div class="details">
                 <p>{desc}</p>
                 <span class="hint">Click to Copy</span>
@@ -71,7 +71,7 @@ def render_emoji_grid(results, columns=3):
         }}
         .score {{
             font-size: 12px;
-            color: #ffffff80;
+            color: #787878;
         }}
         .details {{
             position: absolute;
