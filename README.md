@@ -1,4 +1,4 @@
-# ✨ Semantic Emoji Search
+# Semantic Emoji Search
 
 AI-powered emoji search engine. This application understands the *meaning* (semantics) behind your query to find the most relevant emojis. It supports over 50 languages and offers compound word analysis.
 
