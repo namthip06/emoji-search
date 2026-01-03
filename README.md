@@ -12,10 +12,6 @@ Key features include:
 - **Compound Word Analysis**: Automatically breaks down compound words (e.g., "Sunflower" → "Sun" + "Flower") to provide granular emoji suggestions for each part (Supports 25+ languages).
 - **Interactive UI**: Clean and responsive interface with grid visualizations.
 
-![Example 1](images/1.png)
-![Example 2](images/2.png)
-![Example 3](images/3.png)
-
 ## Technical Details
 
 ### Dataset
@@ -33,6 +29,10 @@ The system supports state-of-the-art embedding models to capture semantic meanin
 
 - **Compound Search**: Supports **25+ languages** (based on WordNet OMW-1.4).
   [link](https://omwn.org/omw1.html)
+
+![Example 1](images/1.png)
+![Example 2](images/2.png)
+![Example 3](images/3.png)
 
 ## Prerequisites
 
